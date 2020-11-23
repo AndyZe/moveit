@@ -36,7 +36,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <moveit/planning_scene/planning_scene.h>
-#include <moveit/collision_detection_fcl/collision_detector_allocator_fcl.h>
+#include <moveit/collision_detection_bullet/collision_detector_allocator_bullet.h>
 #include <geometric_shapes/shape_operations.h>
 #include <moveit/collision_detection/collision_tools.h>
 #include <moveit/trajectory_processing/trajectory_tools.h>
@@ -160,7 +160,7 @@ void PlanningScene::initialize()
   for (const srdf::Model::DisabledCollision& it : dc)
     acm_->setEntry(it.link1_, it.link2_, true);
 
-  setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorFCL::create());
+  setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorBullet::create());
 }
 
 /* return NULL on failure */

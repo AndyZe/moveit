@@ -41,7 +41,7 @@
 #include <moveit/transforms/transforms.h>
 #include <moveit/collision_detection/collision_detector_allocator.h>
 #include <moveit/collision_detection/world_diff.h>
-#include <moveit/collision_detection/collision_env.h>
+#include <moveit/collision_detection/collision_env_bullet.h>
 #include <moveit/kinematic_constraints/kinematic_constraint.h>
 #include <moveit/kinematics_base/kinematics_base.h>
 #include <moveit/robot_trajectory/robot_trajectory.h>
@@ -979,7 +979,7 @@ private:
   /* \brief A set of compatible collision detectors */
   struct CollisionDetector
   {
-    collision_detection::CollisionDetectorAllocatorPtr alloc_;
+    collision_detection::CollisionDetectorAllocatorBulletPtr alloc_;
     collision_detection::CollisionEnvPtr cenv_;  // never NULL
     collision_detection::CollisionEnvConstPtr cenv_const_;
 
