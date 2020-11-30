@@ -109,30 +109,28 @@ void CollisionEnvBullet::checkSelfCollisionHelper(const CollisionRequest& req, C
                                                   const moveit::core::RobotState& state,
                                                   const AllowedCollisionMatrix* acm) const
 {
-  std::vector<collision_detection_bullet::CollisionObjectWrapperPtr> cows;
-  addAttachedOjects(state, cows);
-
   if (req.distance)
   {
     manager_->setContactDistanceThreshold(MAX_DISTANCE_MARGIN);
   }
 
-  for (const collision_detection_bullet::CollisionObjectWrapperPtr& cow : cows)
+  std::vector<collision_detection_bullet::CollisionObjectWrapperPtr> attached_cows;
+  addAttachedOjects(state, attached_cows);
+  updateTransformsFromState(state, manager_);
+
+  for (const collision_detection_bullet::CollisionObjectWrapperPtr& cow : attached_cows)
   {
     manager_->addCollisionObject(cow);
     manager_->setCollisionObjectsTransform(
         cow->getName(), state.getAttachedBody(cow->getName())->getGlobalCollisionBodyTransforms()[0]);
   }
 
-  // updating link positions with the current robot state
-  for (const std::string& link : active_)
-  {
-    manager_->setCollisionObjectsTransform(link, state.getCollisionBodyTransform(link, 0));
-  }
+  // Only links of the robot body are active
+  manager_->setActiveCollisionObjects(active_);
 
-  manager_->contactTest(res, req, acm, true);
+  manager_->contactTest(res, req, acm, false);
 
-  for (const collision_detection_bullet::CollisionObjectWrapperPtr& cow : cows)
+  for (const collision_detection_bullet::CollisionObjectWrapperPtr& cow : attached_cows)
   {
     manager_->removeCollisionObject(cow->getName());
   }
