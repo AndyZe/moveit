@@ -123,6 +123,7 @@ void CollisionCheck::run(const ros::TimerEvent& timer_event)
   scene_collision_distance_ = collision_result_.distance;
   collision_detected_ |= collision_result_.collision;
   collision_result_.print();
+  ROS_WARN_STREAM_THROTTLE(0.2, scene_collision_distance_);
 
   collision_result_.clear();
   // Self-collisions and scene collisions are checked separately so different thresholds can be used
@@ -130,6 +131,7 @@ void CollisionCheck::run(const ros::TimerEvent& timer_event)
   self_collision_distance_ = collision_result_.distance;
   collision_detected_ |= collision_result_.collision;
   collision_result_.print();
+  ROS_ERROR_STREAM_THROTTLE(0.2, self_collision_distance_);
 
   velocity_scale_ = 1;
   // If we're definitely in collision, stop immediately
