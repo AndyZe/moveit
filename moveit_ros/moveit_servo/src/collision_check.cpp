@@ -81,11 +81,12 @@ CollisionCheck::CollisionCheck(ros::NodeHandle& nh, const moveit_servo::ServoPar
   current_state_ = planning_scene_monitor_->getStateMonitor()->getCurrentState();
   acm_ = getLockedPlanningSceneRO()->getAllowedCollisionMatrix();
 
-  // Set up Bullet collision detection
-  collision_det_allocation_ = std::make_shared<collision_detection::CollisionDetectorAllocatorBullet>();
-  const collision_detection::WorldPtr& world =
-      planning_scene_monitor::LockedPlanningSceneRW(planning_scene_monitor_)->getWorldNonConst();
-  collision_env_ = collision_det_allocation_->allocateEnv(world, getLockedPlanningSceneRO()->getRobotModel());
+  // Maintain this local copy of the planning scene, to reduce locking of planning_scene_monitor_
+  local_planning_scene_ = std::make_unique<planning_scene::PlanningScene>(
+    getLockedPlanningSceneRO()->getRobotModel()
+    );
+  // Use Bullet collision detection, for speed
+  local_planning_scene_->setActiveCollisionDetector(collision_detection::CollisionDetectorAllocatorBullet::create());
 }
 
 planning_scene_monitor::LockedPlanningSceneRO CollisionCheck::getLockedPlanningSceneRO() const
@@ -116,16 +117,20 @@ void CollisionCheck::run(const ros::TimerEvent& timer_event)
   // Update to the latest current state
   current_state_ = planning_scene_monitor_->getStateMonitor()->getCurrentState();
   current_state_->update();
+  // A local copy, for thread safety
+  moveit::core::RobotState current_state = *current_state_;
   collision_detected_ = false;
 
   collision_result_.clear();
-  collision_env_->checkRobotCollision(collision_request_, collision_result_, *current_state_, acm_);
+  local_planning_scene_->getCollisionEnv()->checkRobotCollision(collision_request_, collision_result_, current_state);
+  //collision_env_->checkRobotCollision(collision_request_, collision_result_, *current_state_, acm_);
   scene_collision_distance_ = collision_result_.distance;
   collision_detected_ |= collision_result_.collision;
 
   collision_result_.clear();
+  local_planning_scene_->checkSelfCollision(collision_request_, collision_result_, current_state, acm_);
   // Self-collisions and scene collisions are checked separately so different thresholds can be used
-  collision_env_->checkSelfCollision(collision_request_, collision_result_, *current_state_, acm_);
+  //collision_env_->checkSelfCollision(collision_request_, collision_result_, *current_state_, acm_);
   self_collision_distance_ = collision_result_.distance;
   collision_detected_ |= collision_result_.collision;
 
