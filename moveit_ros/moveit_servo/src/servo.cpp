@@ -66,6 +66,15 @@ Servo::Servo(ros::NodeHandle& nh, const planning_scene_monitor::PlanningSceneMon
   if (!planning_scene_monitor_->getStateMonitor())
   {
     planning_scene_monitor_->startStateMonitor(parameters_.joint_topic);
+    ROS_ERROR_STREAM("Needed to startStateMonitor!");
+    ROS_ERROR_STREAM("Needed to startStateMonitor!");
+    ROS_ERROR_STREAM("Needed to startStateMonitor!");
+  }
+  else
+  {
+    ROS_ERROR_STREAM("Did not need to startStateMonitor!");
+    ROS_ERROR_STREAM("Did not need to startStateMonitor!");
+    ROS_ERROR_STREAM("Did not need to startStateMonitor!");
   }
   planning_scene_monitor->getStateMonitor()->enableCopyDynamics(true);
 
