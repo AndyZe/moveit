@@ -227,13 +227,13 @@ void CollisionEnvBullet::checkRobotCollisionHelperCCD(const CollisionRequest& re
 void CollisionEnvBullet::distanceSelf(const DistanceRequest& req, DistanceResult& res,
                                       const moveit::core::RobotState& state) const
 {
-  ROS_INFO_NAMED("collision_detection.bullet", "Distance to self not implemented yet.");
+  ROS_INFO_NAMED("collision_detection.bullet", "distanceSelf not implemented yet.");
 }
 
 void CollisionEnvBullet::distanceRobot(const DistanceRequest& req, DistanceResult& res,
                                        const moveit::core::RobotState& state) const
 {
-  ROS_INFO_NAMED("collision_detection.bullet", "Distance to self not implemented yet.");
+  ROS_INFO_NAMED("collision_detection.bullet", "distanceRobot not implemented yet.");
 }
 
 void CollisionEnvBullet::addToManager(const World::Object* obj)
