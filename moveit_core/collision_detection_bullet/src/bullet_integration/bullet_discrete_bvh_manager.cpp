@@ -78,6 +78,14 @@ void BulletDiscreteBVHManager::contactTest(collision_detection::CollisionResult&
                                                            << " collisions");
 }
 
+void BulletDiscreteBVHManager::contactTest(collision_detection::CollisionResult& collisions,
+                                           const collision_detection::CollisionRequest& req,
+                                           const std::string& link_in_motion,
+                                           const std::vector<std::string>& check_against_links)
+{
+  ;
+}
+
 void BulletDiscreteBVHManager::addCollisionObject(const CollisionObjectWrapperPtr& cow)
 {
   link2cow_[cow->getName()] = cow;

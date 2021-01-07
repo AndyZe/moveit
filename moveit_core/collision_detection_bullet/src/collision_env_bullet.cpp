@@ -166,6 +166,14 @@ void CollisionEnvBullet::checkRobotCollision(const CollisionRequest& req, Collis
   checkRobotCollisionHelperCCD(req, res, state1, state2, &acm);
 }
 
+void CollisionEnvBullet::checkRobotCollision(const CollisionRequest& req, CollisionResult& res,
+                                             const moveit::core::RobotState& state,
+                                             const std::string& check_this_link,
+                                             const std::vector<std::string>& check_against_links) const
+{
+  ;
+}
+
 void CollisionEnvBullet::checkRobotCollisionHelper(const CollisionRequest& req, CollisionResult& res,
                                                    const moveit::core::RobotState& state,
                                                    const AllowedCollisionMatrix* acm) const

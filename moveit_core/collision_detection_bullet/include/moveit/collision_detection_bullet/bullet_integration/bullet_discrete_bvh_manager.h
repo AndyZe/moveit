@@ -64,6 +64,15 @@ public:
   void contactTest(collision_detection::CollisionResult& collisions, const collision_detection::CollisionRequest& req,
                    const collision_detection::AllowedCollisionMatrix* acm, bool self) override;
 
+  /**@brief Perform a contact test for one link against a list of other links.
+   * @param collisions The Contact results data
+   * @param req The contact request
+   * @param acm The allowed collision matrix
+   * @param link_in_motion Check this link against check_against_links
+   * @param check_against_links Check against this list */
+  void contactTest(collision_detection::CollisionResult& collisions, const collision_detection::CollisionRequest& req,
+                 const std::string& link_in_motion, const std::vector<std::string>& check_against_links);
+
   /**@brief Add a bullet collision object to the manager
    *  @param cow The bullet collision object */
   void addCollisionObject(const CollisionObjectWrapperPtr& cow) override;
