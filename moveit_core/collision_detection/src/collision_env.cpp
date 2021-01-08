@@ -303,5 +303,4 @@ void CollisionEnv::checkCollision(const CollisionRequest& req, CollisionResult& 
   if (!res.collision || (req.contacts && res.contacts.size() < req.max_contacts))
     checkRobotCollision(req, res, state, acm);
 }
-
 }  // end of namespace collision_detection

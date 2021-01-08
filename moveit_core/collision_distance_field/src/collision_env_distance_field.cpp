@@ -1522,6 +1522,12 @@ void CollisionEnvDistanceField::checkRobotCollision(const CollisionRequest& req,
   ROS_ERROR_NAMED("collision_detection.distance", "Continuous collision checking not implemented");
 }
 
+void CollisionEnvDistanceField::checkSpecificLinkCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state,
+                         const std::string& check_this_link, const std::vector<std::string>& check_against_links) const
+{
+  ROS_ERROR_NAMED("collision_detection.distance", "Specific link checking not implemented");
+}
+
 void CollisionEnvDistanceField::getCollisionGradients(const CollisionRequest& req, CollisionResult& res,
                                                       const moveit::core::RobotState& state,
                                                       const AllowedCollisionMatrix* acm,

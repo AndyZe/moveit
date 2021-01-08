@@ -82,6 +82,9 @@ public:
   void checkRobotCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state1,
                            const moveit::core::RobotState& state2) const override;
 
+  void checkSpecificLinkCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state,
+                         const std::string& check_this_link, const std::vector<std::string>& check_against_links) const override;
+
   void distanceSelf(const DistanceRequest& req, DistanceResult& res,
                     const moveit::core::RobotState& state) const override;
 

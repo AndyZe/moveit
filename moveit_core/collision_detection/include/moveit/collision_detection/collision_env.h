@@ -156,6 +156,9 @@ public:
                                    const moveit::core::RobotState& state1,
                                    const moveit::core::RobotState& state2) const = 0;
 
+  virtual void checkSpecificLinkCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state,
+                         const std::string& check_this_link, const std::vector<std::string>& check_against_links) const = 0;
+
   /** \brief The distance to self-collision given the robot is at state \e state.
       @param req A DistanceRequest object that encapsulates the distance request
       @param res A DistanceResult object that encapsulates the distance result

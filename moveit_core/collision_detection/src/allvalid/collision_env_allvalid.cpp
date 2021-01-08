@@ -92,6 +92,14 @@ void collision_detection::CollisionEnvAllValid::checkRobotCollision(const Collis
     ROS_INFO_NAMED("collision_detection", "Using AllValid collision detection. No collision checking is performed.");
 }
 
+void collision_detection::CollisionEnvAllValid::checkSpecificLinkCollision(const CollisionRequest& req, CollisionResult& res, const moveit::core::RobotState& state,
+                         const std::string& check_this_link, const std::vector<std::string>& check_against_links) const
+{
+  res.collision = false;
+  if (req.verbose)
+    ROS_INFO_NAMED("collision_detection", "Using AllValid collision detection. No collision checking is performed.");
+}
+
 void collision_detection::CollisionEnvAllValid::distanceRobot(const collision_detection::DistanceRequest& req,
                                                               collision_detection::DistanceResult& res,
                                                               const moveit::core::RobotState& state) const
