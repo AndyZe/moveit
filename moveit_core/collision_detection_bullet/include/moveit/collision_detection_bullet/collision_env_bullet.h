@@ -39,6 +39,7 @@
 #include <moveit/collision_detection/collision_env.h>
 #include <moveit/collision_detection_bullet/bullet_integration/bullet_discrete_bvh_manager.h>
 #include <moveit/collision_detection_bullet/bullet_integration/bullet_cast_bvh_manager.h>
+#include <mutex>
 
 namespace collision_detection
 {
@@ -140,5 +141,8 @@ private:
   void notifyObjectChange(const ObjectConstPtr& obj, World::Action action);
 
   World::ObserverHandle observer_handle_;
+
+  // Lock the collision environment, for thread safety
+  mutable std::mutex collision_env_mutex_;
 };
 }  // namespace collision_detection
