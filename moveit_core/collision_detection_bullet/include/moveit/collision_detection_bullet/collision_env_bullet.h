@@ -114,12 +114,12 @@ protected:
   void addLinkAsCollisionObject(const urdf::LinkSharedPtr& link);
 
   /** \brief Handles self collision checks */
-  mutable collision_detection_bullet::BulletDiscreteBVHManagerPtr manager_{
+  collision_detection_bullet::BulletDiscreteBVHManagerPtr manager_{
     new collision_detection_bullet::BulletDiscreteBVHManager()
   };
 
   /** \brief Handles continuous robot world collision checks */
-  mutable collision_detection_bullet::BulletCastBVHManagerPtr manager_CCD_{
+  collision_detection_bullet::BulletCastBVHManagerPtr manager_CCD_{
     new collision_detection_bullet::BulletCastBVHManager()
   };
 
