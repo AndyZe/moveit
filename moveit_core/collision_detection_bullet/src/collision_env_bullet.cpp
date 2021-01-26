@@ -125,6 +125,17 @@ void CollisionEnvBullet::checkSelfCollisionHelper(const CollisionRequest& req, C
         cow->getName(), state.getAttachedBody(cow->getName())->getGlobalCollisionBodyTransforms()[0]);
   }
 
+  // Specify active collision links
+  if (!req.group_name.empty())
+  {
+    auto joint_model_group = robot_model_->getJointModelGroup(req.group_name);
+    manager_->setActiveCollisionObjects(joint_model_group->getJointModelNames());
+  }
+  else  // Check all links (default)
+  {
+    manager_->setActiveCollisionObjects(active_);
+  }
+
   // updating link positions with the current robot state
   for (const std::string& link : active_)
   {
