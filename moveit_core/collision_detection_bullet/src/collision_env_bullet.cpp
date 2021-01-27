@@ -110,6 +110,8 @@ void CollisionEnvBullet::checkSelfCollisionHelper(const CollisionRequest& req, C
                                                   const moveit::core::RobotState& state,
                                                   const AllowedCollisionMatrix* acm) const
 {
+  std::lock_guard<std::mutex> guard(collision_env_mutex_);
+
   std::vector<collision_detection_bullet::CollisionObjectWrapperPtr> cows;
   addAttachedOjects(state, cows);
 
@@ -182,6 +184,8 @@ void CollisionEnvBullet::checkRobotCollisionHelper(const CollisionRequest& req, 
                                                    const moveit::core::RobotState& state,
                                                    const AllowedCollisionMatrix* acm) const
 {
+  std::lock_guard<std::mutex> guard(collision_env_mutex_);
+
   if (req.distance)
   {
     manager_->setContactDistanceThreshold(MAX_DISTANCE_MARGIN);
