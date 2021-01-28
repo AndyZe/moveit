@@ -44,7 +44,7 @@
 namespace collision_detection
 {
 const std::string CollisionDetectorAllocatorBullet::NAME("Bullet");
-const double MAX_DISTANCE_MARGIN = 99;
+const double MAX_DISTANCE_MARGIN = 0.2; //99;
 constexpr char LOGNAME[] = "collision_detection.bullet";
 
 CollisionEnvBullet::CollisionEnvBullet(const moveit::core::RobotModelConstPtr& model, double padding, double scale)
@@ -191,6 +191,8 @@ void CollisionEnvBullet::checkRobotCollisionHelper(const CollisionRequest& req, 
     manager_->setContactDistanceThreshold(MAX_DISTANCE_MARGIN);
   }
 
+  auto originally_active_links = manager_->getActiveCollisionObjects();
+
   std::vector<collision_detection_bullet::CollisionObjectWrapperPtr> attached_cows;
   addAttachedOjects(state, attached_cows);
   updateTransformsFromState(state, manager_);
@@ -202,8 +204,28 @@ void CollisionEnvBullet::checkRobotCollisionHelper(const CollisionRequest& req, 
         cow->getName(), state.getAttachedBody(cow->getName())->getGlobalCollisionBodyTransforms()[0]);
   }
 
-  manager_->contactTest(res, req, acm, false);
+  // Specify active collision links
+  if (!req.group_name.empty())
+  {
+    auto joint_model_group = robot_model_->getJointModelGroup(req.group_name);
+    std::vector<std::string> active_links = joint_model_group->getLinkModelNames();
+    // Disable links that are not in the joint_model_group
+    for (const std::string& link_name : active_)
+    {
+      auto pos = std::find(active_links.begin(), active_links.end(), link_name);
+      if (pos == active_links.end())
+      {
+        manager_->disableCollisionObject(link_name);
+      }
+    }
+  }
 
+  // Reset
+  if (!req.group_name.empty())
+  {
+    for (const std::string& link : originally_active_links)
+      manager_->enableCollisionObject(link);
+  }
   for (const collision_detection_bullet::CollisionObjectWrapperPtr& cow : attached_cows)
   {
     manager_->removeCollisionObject(cow->getName());
