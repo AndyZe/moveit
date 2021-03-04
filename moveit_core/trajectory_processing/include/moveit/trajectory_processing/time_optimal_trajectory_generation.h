@@ -72,7 +72,7 @@ protected:
 class Path
 {
 public:
-  Path(const std::list<Eigen::VectorXd>& path, double max_deviation = 0.0);
+  Path(const std::list<Eigen::VectorXd>& path, const Eigen::VectorXd& initial_velocities, double max_deviation = 0.0);
   Path(const Path& path);
   double getLength() const;
   Eigen::VectorXd getConfig(double s) const;
@@ -86,6 +86,7 @@ private:
   double length_;
   std::list<std::pair<double, bool>> switching_points_;
   std::list<std::unique_ptr<PathSegment>> path_segments_;
+  Eigen::VectorXd initial_velocities_;
 };
 
 class Trajectory

@@ -185,10 +185,13 @@ private:
   Eigen::VectorXd y;
 };
 
-Path::Path(const std::list<Eigen::VectorXd>& path, double max_deviation) : length_(0.0)
+Path::Path(const std::list<Eigen::VectorXd>& path, const Eigen::VectorXd& initial_velocities, double max_deviation) : length_(0.0)
 {
   if (path.size() < 2)
     return;
+
+  initial_velocities_ = initial_velocities_;
+
   std::list<Eigen::VectorXd>::const_iterator path_iterator1 = path.begin();
   std::list<Eigen::VectorXd>::const_iterator path_iterator2 = path_iterator1;
   ++path_iterator2;
@@ -926,6 +929,14 @@ bool TimeOptimalTrajectoryGeneration::computeTimeStamps(robot_trajectory::RobotT
   const unsigned num_joints = group->getVariableCount();
   const unsigned num_points = trajectory.getWayPointCount();
 
+  // Get the initial velocities
+  Eigen::VectorXd initial_velocities(num_joints);
+  const moveit::core::RobotState first_waypoint = trajectory.getFirstWayPoint();
+  for (size_t j = 0; j < num_joints; ++j)
+  {
+    initial_velocities[j] = first_waypoint.getVariableVelocity(vars[j] /* joint name */);
+  }
+
   // Get the limits (we do this at same time, unlike IterativeParabolicTimeParameterization)
   Eigen::VectorXd max_velocity(num_joints);
   Eigen::VectorXd max_acceleration(num_joints);
@@ -984,7 +995,7 @@ bool TimeOptimalTrajectoryGeneration::computeTimeStamps(robot_trajectory::RobotT
   }
 
   // Now actually call the algorithm
-  Trajectory parameterized(Path(points, path_tolerance_), max_velocity, max_acceleration, 0.001);
+  Trajectory parameterized(Path(points, initial_velocities, path_tolerance_), max_velocity, max_acceleration, 0.001);
   if (!parameterized.isValid())
   {
     ROS_ERROR_NAMED(LOGNAME, "Unable to parameterize trajectory.");
